@@ -34,6 +34,12 @@ namespace OrdShop
             services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             //Inyeccion de dependencias
             services.AddScoped<IOrdenCompra, ProviderOrdenCompra>();
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder => builder.AllowAnyOrigin());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +60,10 @@ namespace OrdShop
             {
                 endpoints.MapControllers();
             });
+
+            app.UseRouting();
+
+            app.UseCors();
         }
     }
 }

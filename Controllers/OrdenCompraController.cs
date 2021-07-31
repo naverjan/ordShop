@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrdShop.Interfaces;
 using OrdShop.Models;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace OrdShop.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController]    
     public class OrdenCompraController : ControllerBase
     {
         private readonly IOrdenCompra providerOrden;
@@ -20,12 +21,28 @@ namespace OrdShop.Controllers
         {
             this.providerOrden = providerOrden;
         }
-
+       
         [HttpGet]
-        public List<OrdenCompra> getOrdenesCompra()
+        public ActionResult getOrdenesCompra()
         {
             var result = providerOrden.GetOrdenCompras();
-            return result;
+            return Ok(new { listOrdenes = result});
+        }
+
+        [HttpGet]
+        [Route("aprobarOrdenCompra")]
+        public ActionResult aprobarOrdenCompra(int idCompra)
+        {
+            var result = providerOrden.aprobarOrdenCompra(idCompra);
+            return Ok(new { status = result.status, message = result.message });
+        }
+
+        [HttpGet]
+        [Route("anularOrdenCompra")]
+        public ActionResult anularOrdenCompra(int idCompra)
+        {
+            var result = providerOrden.anularOrdenCompra(idCompra);
+            return Ok(new { status = result.status, message = result.message });
         }
     }
 }

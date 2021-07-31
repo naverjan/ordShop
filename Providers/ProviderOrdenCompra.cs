@@ -16,6 +16,39 @@ namespace OrdShop.Providers
             this.dbContext = dbContext;
         }
 
+        public (int status, string message) anularOrdenCompra(int idCompra)
+        {
+            try
+            {
+                var order = dbContext.ordenCompras.Where(o => o.id == idCompra).FirstOrDefault();
+                order.estado = 3;//estado anulado
+                dbContext.ordenCompras.Update(order);
+                dbContext.SaveChanges();
+                return (200, "Anulacion exitosa");
+            }
+            catch
+            {
+                return (400, "Ocurrio un error al ralizar la anulacion");
+            }
+        }
+
+        public (int status, string message) aprobarOrdenCompra(int idCompra)
+        {
+            try
+            {
+                var order = dbContext.ordenCompras.Where(o => o.id == idCompra).FirstOrDefault();
+                order.estado = 2;//estado aprobado
+                dbContext.ordenCompras.Update(order);
+                dbContext.SaveChanges();
+                return (200, "Aprobacion exitosa");
+            }
+            catch
+            {
+                return (400, "Ocurrio un error al ralizar la aprobacion");
+            }
+
+        }
+
         public List<OrdenCompra> GetOrdenCompras()
         {
             var result = dbContext.ordenCompras.ToList();
